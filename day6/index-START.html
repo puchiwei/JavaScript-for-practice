@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+<script>
+const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+(function(){
+  const xhr = new XMLHttpRequest();
+  xhr.open('get',endpoint,true) ; 
+  xhr.send(null);  
+
+  xhr.onload=function(){
+    if(xhr.readyState===4){
+    const dataStr = xhr.responseText ;
+    let data =  JSON.parse(dataStr);
+    
+    //DOM styles
+    const search = document.querySelector('.search');
+    const input = search.value;
+    const list = document.querySelector('.suggestions');
+    function findMatches(words){
+      console.log(words);
+      let that = this ;
+      return data.filter(item=>{
+        console.log('yoyo');
+        const regex = new RegExp(words,'gi');//利用正則表示式去進行資料的全域搜尋
+        return item.city.match(regex) || item.state.match(regex);
+        
+      })
+    }
+    function inputHandler(){
+      let matchesAry = findMatches(this.value) ;
+      console.log(matchesAry);
+      let str = '';
+      matchesAry.forEach(item => {
+        let cityStr = (item.city).replace(this.value,'');
+        let stateStr = (item.city).replace(this.value,'');
+        console.log(cityStr,stateStr)
+        let content = `<li ><span>${cityStr}<span class='hl'>${this.value}</span>,${stateStr}<span class='hl'>${this.value}</span></span><span>
+          ${item.population}</span></li>
+        `
+      
+        str += content ;
+      });
+      list.innerHTML = str ;
+    }
+    search.addEventListener('keyup',inputHandler,false);
+    
+  }
+  }
+
+  
+  
+
+
+
+
+})();
+
+
+
+
+
+
+</script>
+</body>
+</html>
