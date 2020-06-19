@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+<canvas id="draw" width="800" height="800"></canvas>
+<script>
+;(function(){
+    //DOM styles
+    const canvas =document.querySelector('#draw');
+    const ctx = canvas.getContext('2d')
+    let drawBoolean = false;
+    let x = 0 ,y = 0 ;  
+    let widthHandeler = 1 ;
+    let lineWidth = 1;
+    let colorArc = 0 ;
+
+    canvas.addEventListener('mousedown',(e)=>{
+        console.log('down!')
+        drawBoolean = true ;
+        x = e.clientX;
+        y = e.clientY;
+        if (canvas.getContext) {
+            ctx.lineCap = 'round';
+            // ctx.lineJoin = 'round';
+            ctx.moveTo(x, y);
+        }
+
+        
+},false)
+
+//少變色的功能
+
+    canvas.addEventListener('mousemove',(e)=>{
+        if(!drawBoolean){return}
+        ctx.beginPath();//開始繪圖功能
+        console.log('move');
+        x = e.clientX;
+        y = e.clientY;
+        function getColor(){
+            colorArc+=1;
+            if(colorArc>360){
+                colorArc = 0 ;
+            }
+            return colorArc
+        };
+        ctx.strokeStyle = `hsl(${getColor()},100%,50%)` ; //利用色環來產生漸變色
+        if(lineWidth<1||lineWidth>50){
+            widthHandeler*=-1
+        }
+        lineWidth += widthHandeler;
+        ctx.lineWidth = lineWidth ;
+        ctx.lineTo(x, y)//將路徑數值化
+        ctx.stroke();//填滿上述路徑
+
+    },false)
+
+
+    canvas.addEventListener('mouseup',()=>{
+        drawBoolean = !drawBoolean;
+        console.log('up');
+    },false)
+
+
+    canvas.addEventListener('mouseleave',()=>{
+        console.log('leave');
+    },false)
+})()
+
+
+</script>
+
+<style>
+  html, body {
+    margin: 0;
+    border:.5px black solid;
+  }
+</style>
+
+</body>
+</html>
