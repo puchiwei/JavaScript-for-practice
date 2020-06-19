@@ -16,16 +16,14 @@
     let widthHandeler = 1 ;
     let lineWidth = 1;
     let colorArc = 0 ;
-
+    let x1 = 0 ,y1 = 0 ;
     canvas.addEventListener('mousedown',(e)=>{
         console.log('down!')
         drawBoolean = true ;
-        x = e.clientX;
-        y = e.clientY;
+        x2 = e.offsetX;
+        y2 = e.offsetY;
         if (canvas.getContext) {
             ctx.lineCap = 'round';
-            // ctx.lineJoin = 'round';
-            ctx.moveTo(x, y);
         }
 
         
@@ -36,9 +34,11 @@
     canvas.addEventListener('mousemove',(e)=>{
         if(!drawBoolean){return}
         ctx.beginPath();//開始繪圖功能
+        ctx.moveTo(x2,y2);
         console.log('move');
-        x = e.clientX;
-        y = e.clientY;
+        ctx.lineTo(e.offsetX, e.offsetY);//將路徑數值化
+        ctx.stroke();//填滿上述路徑
+        [x2,y2] =  [e.offsetX, e.offsetY] //讓動作連續(新位置能跟上舊位置)
         function getColor(){
             colorArc+=1;
             if(colorArc>360){
@@ -52,8 +52,7 @@
         }
         lineWidth += widthHandeler;
         ctx.lineWidth = lineWidth ;
-        ctx.lineTo(x, y)//將路徑數值化
-        ctx.stroke();//填滿上述路徑
+        
 
     },false)
 
